@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  python_part:
+    build: ./pythonPart
+    restart: on-failure
+    env_file: ./.env
+    networks:
+      - localnet
+    ports:
+      - $PYTHON_LOCAL_PORT:$PYTHON_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+networks:
+  localnet:
+    name: bot_network
