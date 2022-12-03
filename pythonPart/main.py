@@ -25,7 +25,7 @@ def create_sequence(dataset):
 
 @app.route("/getData", methods=['GET'])
 def predictValues():
-  dateLength = request.args.get('date')
+  dateLength = int(request.args.get('date'))
   payment_data = pd.read_csv('./data/paymentsFull.csv', delimiter=';')
   print(payment_data.head())
 
@@ -111,7 +111,7 @@ def predictValues():
   # plt.show()
 
   gs_slic_data = gs_slic_data.append(pd.DataFrame(columns=gs_slic_data.columns,
-                                                  index=pd.date_range(start=gs_slic_data.index[-1], periods=11,
+                                                  index=pd.date_range(start=gs_slic_data.index[-1], periods=dateLength,
                                                                       freq='D', closed='right')))
   print(gs_slic_data['2022-04-01	':'2022-04-3'])
 
@@ -120,7 +120,7 @@ def predictValues():
 
   curr_seq = test_seq[-1:]
 
-  for i in range(-10, 0):
+  for i in range(-dateLength, 0):
     up_pred = model.predict(curr_seq)
     upcoming_prediction.iloc[i] = up_pred
     curr_seq = np.append(curr_seq[0][1:], up_pred, axis=0)
