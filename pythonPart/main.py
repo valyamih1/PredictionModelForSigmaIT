@@ -25,7 +25,8 @@ def create_sequence(dataset):
 
 @app.route("/getData", methods=['GET'])
 def predictValues():
-  payment_data = pd.read_csv('data/paymentsFull.csv', delimiter=';')
+  dateLength = request.args.get('date')
+  payment_data = pd.read_csv('./data/paymentsFull.csv', delimiter=';')
   print(payment_data.head())
 
   payment_data.info()
@@ -148,14 +149,20 @@ def predictValues():
   # fg.show()
 
   # plt.show()
+  jsonData = "["
   result = gs_slic_data[['PAY', 'payment_predicted']]
-  jsonData = {}
+  for index, row in result.iterrows():
+      jsonData+= json.dumps({"t":str(index),"pay":str(row['PAY']), "predict":str(row['payment_predicted'])}) + ","
+  jsonData +="]"
+   #  jsonData["timestamp"] = str(index)
+   # jsonData["pay"] = str(row['PAY'])
+   # jsonData["predicted"] = str(row['payment_predicted'])
+  # jsre = json.dumps(result)
 
-
-  return jsonify(200, result.to_json(orient='index', date_format='iso'))
+  return jsonify(200, jsonData)
 
 if __name__ == "__main__":
   try:
-    app.run(host='python_part', port=80)
+    app.run(host='0.0.0.0', port=80)
   except RuntimeError:
     exit(1)
