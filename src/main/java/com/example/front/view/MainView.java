@@ -13,7 +13,6 @@ import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.router.Route;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -49,7 +48,21 @@ public class MainView extends VerticalLayout{
             initLoad(true);
             getChart(Collections.EMPTY_LIST, null);
         } else {
-            List<DataForFigure> data = dataService.getData(value.getName());
+            List<DataForFigure> data = Collections.EMPTY_LIST;
+            switch (value.getName()){
+                case "Day":
+                    data = dataService.getData("1");
+                    break;
+                case "Week":
+                    data = dataService.getData("7");
+                    break;
+                case "Month":
+                    data = dataService.getData("30");
+                    break;
+                case "Year":
+                    data = dataService.getData("365");
+                    break;
+            }
             initLoad(false);
             getChart(data, value.getName());
         }
